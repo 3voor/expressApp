@@ -42,6 +42,15 @@ router.get('/user/:id', function (req, res, next) {
 
 // to skip the rest of the routers middleware functions, call next('router') to pass control back out of the router instance
 
+// error-handling middleware
+router.use(function (err, req, res, next) {
+    console.log('random shit')
+    console.error(err.stack)
+    res.status(500).send('Something broke!')
+    next()
+})
+
+
 // predicate the router with a check and bail out when needed
 router.use(function (req, res, next) {
     console.log(req.headers)
@@ -53,16 +62,14 @@ router.get('/', function (req, res) {
     res.send('hello, user!')
 })
 
+
+
 // use the router and 401 anything failing through
 app.use('/admin', router, function (req, res) {
     res.sendStatus(401)
 })
 
-// error-handling middleware
-app.use(function (err, req, res, next) {
-    console.error(err.stack)
-    res.status(500).send('Something broke!')
-})
+
 
 
 
